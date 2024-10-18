@@ -1,0 +1,46 @@
+<div class="p-6 bg-white rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold text-gray-700 mb-6">Optimize Prompt with Chain of Thought</h2>
+    <form [formGroup]="promptForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div>
+            <label for="systemPrompt" class="block text-gray-600 mb-2">System Prompt:</label>
+            <input id="systemPrompt" formControlName="systemPrompt"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div formArrayName="trainingData">
+            <h3 class="text-gray-600 mt-6 mb-4">Training Data:</h3>
+            <div *ngFor="let item of trainingDataControls; let i = index" [formGroupName]="i"
+                class="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50 flex items-center">
+                <div class="flex-1 space-y-4">
+                    <div>
+                        <label [for]="'input' + i" class="block text-gray-600 mb-1">Input:</label>
+                        <input [id]="'input' + i" formControlName="input"
+                            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label [for]="'output' + i" class="block text-gray-600 mb-1">Output:</label>
+                        <input [id]="'output' + i" formControlName="output"
+                            class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <button type="button" (click)="removeTrainingData(i)"
+                    class="ml-4 text-red-500 border border-red-500 px-3 py-1 rounded-lg hover:bg-red-500 hover:text-white">
+                    Remove
+                </button>
+            </div>
+            <button type="button" (click)="addTrainingData()"
+                class="mt-4 text-green-500 border border-green-500 px-4 py-2 rounded-lg hover:bg-green-500 hover:text-white">
+                Add Training Data
+            </button>
+        </div>
+        <div>
+            <label for="moduleName" class="block text-gray-600 mb-2">Module Name:</label>
+            <input id="moduleName" formControlName="moduleName"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">Forge</button>
+    </form>
+    <div *ngIf="result" class="mt-8 bg-gray-100 p-4 rounded-lg">
+        <h3 class="font-bold text-gray-700">Result:</h3>
+        <pre class="bg-gray-200 p-4 rounded-lg">{{ result | json }}</pre>
+    </div>
+</div>

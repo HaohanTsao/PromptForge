@@ -1,0 +1,21 @@
+<div class="p-6 bg-white rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold text-gray-700 mb-6">Test Prompt</h2>
+    <form [formGroup]="testForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <div>
+            <label for="compiledModuleName" class="block text-gray-600 mb-2">Compiled Module Name:</label>
+            <input id="compiledModuleName" formControlName="compiledModuleName"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div>
+            <label for="testInput" class="block text-gray-600 mb-2">Test Input:</label>
+            <textarea id="testInput" formControlName="testInput" rows="4"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        </div>
+        <button type="submit" [disabled]="!testForm.valid"
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Test</button>
+    </form>
+    <div *ngIf="result" class="mt-8 bg-gray-100 p-4 rounded-lg">
+        <h3 class="font-bold text-gray-700">Result:</h3>
+        <pre class="bg-gray-200 p-4 rounded-lg">{{ result | json }}</pre>
+    </div>
+</div>

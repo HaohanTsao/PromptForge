@@ -14,6 +14,29 @@ gsm8k_trainset, gsm8k_devset = gsm8k.train[:5], gsm8k.dev[:5]
 print(gsm8k_trainset)
 
 # %%
+example = {
+    "What is 5 plus 3?": "8",
+    "What is 10 minus 4?": "6",
+    "What is 7 times 6?": "42",
+    "What is 20 divided by 5?": "4",
+    "What is 12 plus 8?": "20",
+    "What is 15 minus 7?": "8",
+    "What is 9 times 3?": "27",
+    "What is 18 divided by 2?": "9",
+    "What is 4 plus 9?": "13",
+    "What is 11 minus 5?": "6",
+    "What is 8 times 5?": "40",
+    "What is 16 divided by 4?": "4"
+}
+
+
+simple_trainset = []
+for k, v in example.items():
+    example = dspy.Example(question=k, answer=v).with_inputs("question")
+
+    simple_trainset.append(example)
+
+# %%
 # Define the Module
 class CoT(dspy.Module):
     def __init__(self):
@@ -25,13 +48,14 @@ class CoT(dspy.Module):
     
 # %%
 # Compile and Evaluate the Model
+import dspy.evaluate
 from dspy.teleprompt import BootstrapFewShot
 
 # Set up the optimizer: we want to "bootstrap" (i.e., self-generate) 4-shot examples of our CoT program.
-config = dict(max_bootstrapped_demos=3, max_labeled_demos=3)
+config = dict(max_bootstrapped_demos=4, max_labeled_demos=4)
 
 # Optimize! Use the `gsm8k_metric` here. In general, the metric is going to tell the optimizer how well it's doing.
-teleprompter = BootstrapFewShot(metric=gsm8k_metric, **config)
+teleprompter = BootstrapFewShot(metric=dspy.evaluate.answer_exact_match, **config)
 optimized_cot = teleprompter.compile(CoT(), trainset=gsm8k_trainset)
 
 # %%

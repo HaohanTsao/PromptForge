@@ -7,8 +7,9 @@ router = APIRouter()
 @router.post("/optimize_prompt")
 async def optimize_prompt_endpoint(request: OptimizePromptRequest):
     try:
-        optimized_prompt = optimize_prompt(request.system_prompt, request.training_data, request.module_name)
-        return {"optimized_module": optimized_prompt}
+        print(request)
+        optimized_module = optimize_prompt(request.system_prompt, request.training_data, request.module_name)
+        return {"optimized_module": optimized_module}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

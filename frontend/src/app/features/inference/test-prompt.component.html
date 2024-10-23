@@ -19,6 +19,6 @@
     </form>
     <div *ngIf="result" class="mt-8 bg-gray-100 p-4 rounded-lg">
         <h3 class="font-bold text-gray-700">Result:</h3>
-        <pre class="bg-gray-200 p-4 rounded-lg">{{ result | json }}</pre>
+        <pre class="bg-gray-200 p-4 whitespace-pre-wrap rounded-lg break-words">{{ result | json }}</pre>
     </div>
 </div>

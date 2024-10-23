@@ -1,4 +1,3 @@
-// src/app/shared/components/loading/loading.component.ts
 import { Component } from '@angular/core';
 
 @Component({

@@ -1,27 +1,23 @@
 <div class="p-6 bg-white rounded-lg shadow-lg relative">
     <!-- Loading Overlay -->
-    @if (loadingService.isLoading$ | async) {
-    <app-loading />
-    }
+    <ng-container *ngIf="isLoading$ | async">
+        <app-loading></app-loading>
+    </ng-container>
 
     <h2 class="text-2xl font-bold text-gray-700 mb-6">Optimize Prompt with Chain of Thought</h2>
 
     <!-- Error Message -->
-    @if (errorMessage) {
-    <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
-        {{ errorMessage }}
-    </div>
-    }
+    <ng-container *ngIf="errorMessage">
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-600">
+            {{ errorMessage }}
+        </div>
+    </ng-container>
 
     <form [formGroup]="promptForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div>
-            <label for="systemPrompt" class="block text-gray-600 mb-2">System Prompt: <span
-                    class="text-red-500">*</span></label>
-            <input id="systemPrompt" formControlName="systemPrompt" [class]="'w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ' + 
-                (isFieldInvalid('systemPrompt') ? 'border-red-500' : 'border-gray-300')">
-            @if (isFieldInvalid('systemPrompt')) {
-            <p class="mt-1 text-sm text-red-500">System prompt is required</p>
-            }
+            <label for="systemPrompt" class="block text-gray-600 mb-2">System Prompt:</label>
+            <textarea id="systemPrompt" formControlName="systemPrompt" rows="4"
+                class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
         </div>
 
         <div formArrayName="trainingData">
@@ -29,7 +25,7 @@
             <div *ngFor="let item of trainingDataControls; let i = index" [formGroupName]="i"
                 class="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
                 <div class="flex items-center justify-between mb-2">
-                    <span class="font-medium text-gray-700">Training Set {{ i + 1 }}</span>
+                    <span class="font-medium text-gray-700">Example {{ i + 1 }}</span>
                     <button type="button" (click)="removeTrainingData(i)" [disabled]="trainingDataControls.length === 1"
                         [class]="'px-3 py-1 rounded-lg transition-colors ' + 
                         (trainingDataControls.length === 1 ? 
@@ -44,18 +40,18 @@
                                 class="text-red-500">*</span></label>
                         <input [id]="'input' + i" formControlName="input" [class]="'w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ' + 
                             (isTrainingDataFieldInvalid(i, 'input') ? 'border-red-500' : 'border-gray-300')">
-                        @if (isTrainingDataFieldInvalid(i, 'input')) {
-                        <p class="mt-1 text-sm text-red-500">Input is required</p>
-                        }
+                        <ng-container *ngIf="isTrainingDataFieldInvalid(i, 'input')">
+                            <p class="mt-1 text-sm text-red-500">Input is required</p>
+                        </ng-container>
                     </div>
                     <div>
                         <label [for]="'output' + i" class="block text-gray-600 mb-1">Output: <span
                                 class="text-red-500">*</span></label>
                         <input [id]="'output' + i" formControlName="output" [class]="'w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ' + 
                             (isTrainingDataFieldInvalid(i, 'output') ? 'border-red-500' : 'border-gray-300')">
-                        @if (isTrainingDataFieldInvalid(i, 'output')) {
-                        <p class="mt-1 text-sm text-red-500">Output is required</p>
-                        }
+                        <ng-container *ngIf="isTrainingDataFieldInvalid(i, 'output')">
+                            <p class="mt-1 text-sm text-red-500">Output is required</p>
+                        </ng-container>
                     </div>
                 </div>
             </div>
@@ -70,21 +66,22 @@
                     class="text-red-500">*</span></label>
             <input id="moduleName" formControlName="moduleName" [class]="'w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ' + 
                 (isFieldInvalid('moduleName') ? 'border-red-500' : 'border-gray-300')">
-            @if (isFieldInvalid('moduleName')) {
-            <p class="mt-1 text-sm text-red-500">Module name is required</p>
-            }
+            <ng-container *ngIf="isFieldInvalid('moduleName')">
+                <p class="mt-1 text-sm text-red-500">Module name is required</p>
+            </ng-container>
         </div>
 
-        <button type="submit" [disabled]="loadingService.isLoading$ | async"
+        <button type="submit" [disabled]="isLoading$ | async"
             class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors">
-            {{ (loadingService.isLoading$ | async) ? 'Processing...' : 'Forge' }}
+            {{ (isLoading$ | async) ? 'Processing...' : 'Forge' }}
         </button>
     </form>
 
-    @if (result) {
-    <div class="mt-8 bg-gray-100 p-4 rounded-lg">
-        <h3 class="font-bold text-gray-700">Result:</h3>
-        <pre class="bg-gray-200 p-4 rounded-lg overflow-x-auto">{{ result | json }}</pre>
-    </div>
-    }
+    <ng-container *ngIf="result">
+        <div class="mt-8 bg-gray-100 p-4 rounded-lg">
+            <h3 class="font-bold text-gray-700">Result:</h3>
+            <pre class="bg-gray-200 p-4 rounded-lg whitespace-pre-wrap break-words">{{ result | json }}</pre>
+        </div>
+    </ng-container>
+
 </div>

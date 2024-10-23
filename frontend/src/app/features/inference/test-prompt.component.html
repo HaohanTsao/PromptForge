@@ -1,4 +1,7 @@
-<div class="p-6 bg-white rounded-lg shadow-lg">
+<div class="p-6 bg-white rounded-lg shadow-lg relative">
+    <!-- 加載動畫 -->
+    <app-loading *ngIf="isLoading$ | async"></app-loading>
+
     <h2 class="text-2xl font-bold text-gray-700 mb-6">Test Prompt</h2>
     <form [formGroup]="testForm" (ngSubmit)="onSubmit()" class="space-y-6">
         <div>
@@ -11,7 +14,7 @@
             <textarea id="testInput" formControlName="testInput" rows="4"
                 class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
         </div>
-        <button type="submit" [disabled]="!testForm.valid"
+        <button type="submit" [disabled]="!testForm.valid || (isLoading$ | async)"
             class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600">Test</button>
     </form>
     <div *ngIf="result" class="mt-8 bg-gray-100 p-4 rounded-lg">

@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { OptimizePromptComponent } from './optimize-prompt.component';
-import { TestPromptComponent } from './test-prompt.component';
+import { OptimizePromptComponent } from './features/optimize-prompt/optimize-prompt.component';
+import { TestPromptComponent } from './features/inference/test-prompt.component';
 
 export const routes: Routes = [
     { path: 'optimize', component: OptimizePromptComponent },

@@ -23,10 +23,6 @@ example = {
     "What is 15 minus 7?": "8",
     "What is 9 times 3?": "27",
     "What is 18 divided by 2?": "9",
-    "What is 4 plus 9?": "13",
-    "What is 11 minus 5?": "6",
-    "What is 8 times 5?": "40",
-    "What is 16 divided by 4?": "4"
 }
 
 
@@ -56,20 +52,20 @@ config = dict(max_bootstrapped_demos=4, max_labeled_demos=4)
 
 # Optimize! Use the `gsm8k_metric` here. In general, the metric is going to tell the optimizer how well it's doing.
 teleprompter = BootstrapFewShot(metric=dspy.evaluate.answer_exact_match, **config)
-optimized_cot = teleprompter.compile(CoT(), trainset=gsm8k_trainset)
+optimized_cot = teleprompter.compile(CoT(), trainset=simple_trainset)
 
 # %%
 from dspy.evaluate import Evaluate
 # Evaluate
 # Set up the evaluator, which can be used multiple times.
-evaluate = Evaluate(devset=gsm8k_devset, metric=gsm8k_metric, num_threads=4, display_progress=True, display_table=0)
+evaluate = Evaluate(devset=gsm8k_devset, metric=dspy.evaluate.answer_exact_match_str, num_threads=4, display_progress=True, display_table=0)
 
 # Evaluate our `optimized_cot` program.
 evaluate(optimized_cot)
 
 # %%
 # Inspect the Model's History
-turbo.inspect_history(n=1)
+turbo.inspect_history(n=5)
 
 # %%
 # Try

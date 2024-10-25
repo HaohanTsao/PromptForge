@@ -1,14 +1,29 @@
 import dspy
-import dspy.evaluate
 from dspy.teleprompt import BootstrapFewShot
 from typing import List
 import json
 import logging
 
 # Initialize the language model
-turbo = dspy.OllamaLocal(model='llama3.2', max_tokens=None)
-dspy.settings.configure(lm=turbo)
-
+def create_lm(provider: str, lm_args: dict):
+    if provider == "OpenAI":
+        llm = dspy.OpenAI(
+            model=lm_args["model_name"],
+            api_key=lm_args["api_key"],
+            max_tokens=None
+        )
+    
+    elif provider == "Ollama":
+        llm = dspy.OllamaLocal(
+            model=lm_args["model_name"],
+            max_tokens=None
+        )
+    
+    else:
+        raise ValueError(f"Not supported provider: {provider}")
+    
+    return llm
+    
 class CoT(dspy.Module):
     def __init__(self):
         super().__init__()

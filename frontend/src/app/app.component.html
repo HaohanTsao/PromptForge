@@ -1,8 +1,112 @@
 <div class="container mx-auto p-4 bg-gray-100 rounded-lg shadow-md">
   <h1 class="text-3xl font-extrabold text-gray-800 mb-6">PromptForge Basic Block</h1>
+
+  <!-- LM Configuration Section -->
+  <div class="bg-white p-4 rounded-lg shadow mb-6">
+    <h2 class="text-xl font-bold text-gray-700 mb-4">Language Model Configuration</h2>
+
+    <div class="space-y-4">
+      <!-- Provider Selection -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">
+          Select Provider
+        </label>
+        <select [(ngModel)]="selectedProvider" (ngModelChange)="onProviderChange()"
+          class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          [ngClass]="{'border-red-500': formErrors['provider']}">
+          <option value="">Select a provider...</option>
+          <option *ngFor="let p of providers" [value]="p.value">
+            {{p.label}}
+          </option>
+        </select>
+        <p *ngIf="formErrors['provider']" class="mt-1 text-sm text-red-600">
+          {{ formErrors['provider'] }}
+        </p>
+      </div>
+
+      <!-- Dynamic Config Fields -->
+      <ng-container *ngIf="selectedProvider">
+        <div *ngFor="let field of getProviderFields()" class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
+            {{field.display}}
+          </label>
+          <input [type]="field.key.includes('key') ? 'password' : 'text'" [(ngModel)]="modelConfig[field.key]"
+            class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+            [ngClass]="{'border-red-500': formErrors[field.key]}" [placeholder]="'Enter ' + field.display + '...'" />
+          <p *ngIf="formErrors[field.key]" class="mt-1 text-sm text-red-600">
+            {{ formErrors[field.key] }}
+          </p>
+        </div>
+
+        <!-- Optional Fields -->
+        <div class="space-y-4">
+          <!-- Max Tokens -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Max Tokens
+            </label>
+            <input type="number" [(ngModel)]="modelConfig.max_tokens"
+              class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+              [ngClass]="{'border-red-500': formErrors['max_tokens']}" placeholder="Enter max tokens..." />
+            <p *ngIf="formErrors['max_tokens']" class="mt-1 text-sm text-red-600">
+              {{ formErrors['max_tokens'] }}
+            </p>
+          </div>
+
+          <!-- Temperature -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+              Temperature
+            </label>
+            <input type="number" [(ngModel)]="modelConfig.temperature" step="0.1" min="0" max="2"
+              class="w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+              [ngClass]="{'border-red-500': formErrors['temperature']}" placeholder="Enter temperature (0-2)..." />
+            <p *ngIf="formErrors['temperature']" class="mt-1 text-sm text-red-600">
+              {{ formErrors['temperature'] }}
+            </p>
+          </div>
+
+          <!-- Cache -->
+          <div class="flex items-center">
+            <input type="checkbox" [(ngModel)]="modelConfig.cache"
+              class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
+            <label class="ml-2 block text-sm text-gray-700">
+              Enable Cache
+            </label>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button (click)="configureLM()"
+          class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          [disabled]="!isFormValid()">
+          Configure Language Model
+        </button>
+      </ng-container>
+    </div>
+
+    <!-- Status Message -->
+    <div *ngIf="status.message" class="mt-4 p-3 rounded-md flex items-center space-x-2" [ngClass]="{
+        'bg-green-100 text-green-700': status.type === 'success',
+        'bg-red-100 text-red-700': status.type === 'error'
+      }">
+      <i class="fas" [ngClass]="{
+          'fa-check-circle': status.type === 'success',
+          'fa-exclamation-circle': status.type === 'error'
+        }"></i>
+      <span>{{status.message}}</span>
+    </div>
+  </div>
+
+  <!-- Navigation -->
   <nav class="mb-6">
-    <a routerLink="/optimize" class="mr-6 text-blue-600 hover:text-blue-800 underline">Optimize Prompt</a>
-    <a routerLink="/test" class="text-blue-600 hover:text-blue-800 underline">Test Prompt</a>
+    <a routerLink="/optimize" class="mr-6 text-blue-600 hover:text-blue-800 underline">
+      Optimize Prompt
+    </a>
+    <a routerLink="/test" class="text-blue-600 hover:text-blue-800 underline">
+      Test Prompt
+    </a>
   </nav>
+
   <router-outlet></router-outlet>
 </div>

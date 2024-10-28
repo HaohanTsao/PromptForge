@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
-import { LoadingComponent } from '../../shared/components/loading/loading.component'; // 引入 LoadingComponent
-import { LoadingService } from '../../services/loading.service'; // 引入 LoadingService
+import { LoadingComponent } from '../../shared/components/loading/loading.component';
+import { LoadingService } from '../../services/loading.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of, Observable } from 'rxjs';
 
@@ -11,18 +11,18 @@ import { of, Observable } from 'rxjs';
     selector: 'app-test-prompt',
     templateUrl: './test-prompt.component.html',
     standalone: true,
-    imports: [ReactiveFormsModule, CommonModule, LoadingComponent] // 加入 LoadingComponent
+    imports: [ReactiveFormsModule, CommonModule, LoadingComponent]
 })
 export class TestPromptComponent implements OnInit {
     testForm: FormGroup;
     result: any;
     errorMessage: string | null = null;
-    isLoading$!: Observable<boolean>; // 定義 isLoading$
+    isLoading$!: Observable<boolean>;
 
     constructor(
         private fb: FormBuilder,
         private apiService: ApiService,
-        protected loadingService: LoadingService // 注入 LoadingService
+        protected loadingService: LoadingService
     ) {
         this.testForm = this.fb.group({
             compiledModuleName: ['', Validators.required],
@@ -31,7 +31,7 @@ export class TestPromptComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.isLoading$ = this.loadingService.isLoading$; // 初始化 isLoading$
+        this.isLoading$ = this.loadingService.isLoading$;
     }
 
     onSubmit() {
@@ -44,7 +44,7 @@ export class TestPromptComponent implements OnInit {
                 test_input: formValue.testInput
             };
 
-            console.log('Request data:', JSON.stringify(data, null, 2)); // 用於調試
+            console.log('Request data:', JSON.stringify(data, null, 2));
 
             this.loadingService.show();
 
@@ -55,12 +55,12 @@ export class TestPromptComponent implements OnInit {
                     return of(null);
                 }),
                 finalize(() => {
-                    this.loadingService.hide(); // 隱藏加載動畫
+                    this.loadingService.hide();
                 })
             ).subscribe(response => {
                 if (response) {
                     this.result = response;
-                    console.log('Response:', JSON.stringify(this.result, null, 2)); // 用於調試
+                    console.log('Response:', JSON.stringify(this.result, null, 2));
                 }
             });
         } else {

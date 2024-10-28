@@ -17,4 +17,8 @@ export class ApiService {
     testPrompt(data: any): Observable<any> {
         return this.http.post(`${this.apiUrl}/test_prompt`, data);
     }
+
+    createLM(data: any): Observable<any> {
+        return this.http.post(`${this.apiUrl}/create_lm`, data);
+    }
 }

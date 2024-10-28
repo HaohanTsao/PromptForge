@@ -17,8 +17,6 @@ class CreateLMRequest(BaseModel):
     def validate_args(self):
         if self.provider == "OpenAI" and "api_key" not in self.lm_args:
             raise ValueError("OpenAI provider requires an api_key")
-        elif self.provider == "Ollama" and "api_base" not in self.lm_args:
-            raise ValueError("Ollama provider requires an api_base URL")
 
 class TrainingExample(BaseModel):
     input: Dict[str, Any]

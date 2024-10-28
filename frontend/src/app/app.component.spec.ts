@@ -1,22 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import { BasicBlockComponent } from './app.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 
-describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+describe('BasicBlockComponent', () => {
+  let component: BasicBlockComponent;
+  let fixture: ComponentFixture<BasicBlockComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        AppComponent,
+        BasicBlockComponent,
         HttpClientTestingModule,
         RouterTestingModule
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(BasicBlockComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -6,23 +6,67 @@ import logging
 
 # Initialize the language model
 def create_lm(provider: str, lm_args: dict):
+    """
+    Initialize a language model using DSPy 2.5's LM class.
+    
+    Args:
+        provider (str): The LM provider ("OpenAI" or "Ollama")
+        lm_args (dict): Configuration arguments for the LM
+            Required keys:
+            - model_name (str): Name of the model to use
+            - max_tokens (int, optional): Maximum tokens for generation
+            - temperature (float, optional): Sampling temperature
+            - api_key (str, optional): API key for OpenAI
+            - api_base (str, optional): Base URL for Ollama
+    
+    Returns:
+        dspy.LM: Configured language model instance
+    
+    Raises:
+        ValueError: If provider is not supported or required args are missing
+    """
+    # Set default values
+    max_tokens = lm_args.get("max_tokens", None)
+    temperature = lm_args.get("temperature", 0)
+    cache = lm_args.get("cache", True)
+    
     if provider == "OpenAI":
-        llm = dspy.OpenAI(
-            model=lm_args["model_name"],
+        if "api_key" not in lm_args:
+            raise ValueError("OpenAI requires an API key")
+            
+        model_prefix = "openai/"
+        if not lm_args["model_name"].startswith(model_prefix):
+            model_name = f"{model_prefix}{lm_args['model_name']}"
+        else:
+            model_name = lm_args["model_name"]
+            
+        lm = dspy.LM(
+            model=model_name,
             api_key=lm_args["api_key"],
-            max_tokens=None
+            max_tokens=max_tokens,
+            temperature=temperature,
+            cache=cache
         )
     
     elif provider == "Ollama":
-        llm = dspy.OllamaLocal(
-            model=lm_args["model_name"],
-            max_tokens=None
+            
+        model_prefix = "ollama/"
+        if not lm_args["model_name"].startswith(model_prefix):
+            model_name = f"{model_prefix}{lm_args['model_name']}"
+        else:
+            model_name = lm_args["model_name"]
+            
+        lm = dspy.LM(
+            model=model_name,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            cache=cache
         )
     
     else:
         raise ValueError(f"Not supported provider: {provider}")
     
-    return llm
+    return lm
     
 class CoT(dspy.Module):
     def __init__(self):
